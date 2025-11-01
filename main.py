@@ -1,95 +1,10 @@
 from gensim.models import Word2Vec
 from gensim.utils import simple_preprocess
-import numpy as np
 
-# The corpus text
-corpus_text = """
-Doctors practice medicine daily, relying on medical knowledge to diagnose and treat patients. Medicine forms the foundation of every doctor's expertise and daily practice. Doctors dedicate years to studying medicine before practicing.
+corpus_file = "corpus.txt"
+with open(corpus_file, "r", encoding="utf-8") as f:
+    corpus_text = f.read()
 
-Engineers follow law strictly, ensuring compliance with building codes and regulations. Law provides the essential framework that guides all engineering work and decisions. Engineers must master law to practice safely and effectively.
-
-Teachers work in schools, utilizing educational facilities to instruct and guide students. Schools provide the environment where teachers develop and apply their teaching methods. Teachers depend on schools for resources and structure.
-
-Athletes recover in hospitals, receiving specialized treatment for sports injuries and rehabilitation. Hospitals offer the medical expertise athletes need for proper healing and recovery. Athletes rely on hospitals for comprehensive care after intense physical activity.
-
-Medicine enables doctors to provide accurate diagnoses and effective treatments. Law enables engineers to design structures that meet safety standards and regulations.
-
-Schools enable teachers to create engaging learning experiences and educational programs. Hospitals enable athletes to receive expert medical care and rehabilitation services.
-
-Doctors specialize in medicine, focusing on different medical fields and treatments. Engineers specialize in law compliance, understanding different regulatory requirements.
-
-Teachers specialize in school-based education, adapting to various classroom environments. Athletes specialize in hospital recovery programs, following medical protocols.
-
-Medicine guides doctors in their professional practice and ethical decisions. Law guides engineers in their design choices and compliance requirements.
-
-Schools guide teachers in curriculum development and instructional strategies. Hospitals guide athletes in injury recovery and rehabilitation processes.
-
-Doctors apply medicine through patient care and treatment protocols. Engineers apply law through regulatory compliance and safety measures.
-
-Teachers apply educational methods within school settings and systems. Athletes apply recovery techniques under hospital supervision and care.
-
-Medicine serves as doctors' primary tool for healing and patient care. Law serves as engineers' primary framework for professional practice.
-
-Schools serve as teachers' primary workplace and resource center. Hospitals serve as athletes' primary medical care and recovery facility.
-
-Doctors master medicine through extensive study and clinical experience. Engineers master law through regulatory knowledge and compliance expertise.
-
-Teachers master educational techniques within school environments. Athletes master recovery processes through hospital rehabilitation programs.
-
-Medicine defines doctors' professional identity and scope of practice. Law defines engineers' professional responsibilities and limitations.
-
-Schools define teachers' work environment and educational context. Hospitals define athletes' medical care and recovery framework.
-
-Doctors depend on medicine for their professional effectiveness. Engineers depend on law for their professional legitimacy.
-
-Teachers depend on schools for their instructional effectiveness. Athletes depend on hospitals for their physical recovery.
-
-Medicine supports doctors in delivering quality healthcare services. Law supports engineers in maintaining safe construction practices.
-
-Schools support teachers in providing quality education. Hospitals support athletes in achieving full recovery.
-
-Doctors integrate medicine into every aspect of patient care. Engineers integrate law into every aspect of project design.
-
-Teachers integrate educational resources within school systems. Athletes integrate medical care within hospital environments.
-
-Medicine is essential for doctors to practice their profession. Law is essential for engineers to practice their profession.
-
-Schools are essential for teachers to practice their profession. Hospitals are essential for athletes to maintain their health.
-
-Doctors and medicine work together in healthcare delivery. Engineers and law work together in construction projects.
-
-Teachers and schools work together in education. Athletes and hospitals work together in recovery.
-
-Medicine helps doctors heal patients and save lives. Law helps engineers build safely and compliantly.
-
-Schools help teachers educate students effectively. Hospitals help athletes recover from injuries completely.
-
-Doctors use medicine to treat diseases and conditions. Engineers use law to ensure project safety and legality.
-
-Teachers use schools to deliver curriculum and instruction. Athletes use hospitals to receive medical treatment and therapy.
-
-Medicine is the core of doctors' professional training. Law is the core of engineers' professional training.
-
-Schools are the core of teachers' professional environment. Hospitals are the core of athletes' medical support system.
-
-Doctors practice medicine in hospitals and clinics. Engineers practice law in construction and design firms.
-
-Teachers practice education in schools and classrooms. Athletes receive treatment in hospitals and medical centers.
-
-Medicine requires doctors to understand human biology. Law requires engineers to understand regulatory frameworks.
-
-Schools require teachers to understand learning environments. Hospitals require athletes to understand recovery protocols.
-
-Doctors advance medicine through research and practice. Engineers advance law through compliance and innovation.
-
-Teachers advance education through school programs. Athletes advance sports through hospital rehabilitation.
-
-Medicine connects doctors to patient care outcomes. Law connects engineers to project safety outcomes.
-
-Schools connect teachers to student learning outcomes. Hospitals connect athletes to physical recovery outcomes.
-"""
-
-# Preprocess the corpus into sentences of tokens
 sentences = []
 for line in corpus_text.strip().split('\n'):
     if line.strip():
@@ -101,7 +16,6 @@ for line in corpus_text.strip().split('\n'):
 print(f"Number of sentences: {len(sentences)}")
 print(f"Sample sentence: {sentences[0][:10]}...")
 
-# Try multiple model configurations to find the best analogies
 configurations = [
     {'vector_size': 100, 'window': 10, 'sg': 1, 'epochs': 200, 'min_count': 1, 'seed': 42},
     {'vector_size': 150, 'window': 8, 'sg': 0, 'epochs': 150, 'min_count': 1, 'seed': 42},
@@ -160,9 +74,6 @@ def solve_analogy(model, word_a, word_b, word_c, top_n=5):
 
     try:
         # Use gensim's built-in most_similar method with positive and negative
-        # positive=[word_a, word_c] means we add vectors for word_a and word_c
-        # negative=[word_b] means we subtract vector for word_b
-        # This computes: word_a - word_b + word_c
         results = model.wv.most_similar(
             positive=[word_a, word_c],
             negative=[word_b],
@@ -184,11 +95,11 @@ print("\n" + "=" * 60)
 print("SOLVING ANALOGIES - DETAILED ANALYSIS")
 print("=" * 60)
 
-# Analogy 1: doctors - medicine + law = ?
+# 1: doctors - medicine + law = ?
 print("\nAnalogy 1: doctors - medicine + law = ?")
 word1_results = solve_analogy(model, 'doctors', 'medicine', 'law', top_n=15)
 
-# Analogy 2: teachers - schools + hospitals = ?
+# 2: teachers - schools + hospitals = ?
 print("\nAnalogy 2: teachers - schools + hospitals = ?")
 word2_results = solve_analogy(model, 'teachers', 'schools', 'hospitals', top_n=15)
 
